@@ -20,64 +20,57 @@
         }
         .login-container {
             background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            max-width: 400px;
-            width: 90%;
         }
-        h1 {
-            margin-bottom: 20px;
-            font-size: 2rem;
-            letter-spacing: 1px;
-        }
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 1rem;
-        }
-        input {
-            width: 100%;
+        .login-container input {
+            width: 200px;
+            margin: 10px 0;
             padding: 10px;
-            font-size: 1rem;
-            margin-bottom: 20px;
             border: none;
             border-radius: 5px;
-            outline: none;
+            font-size: 1rem;
         }
-        button {
+        .login-container button {
             padding: 10px 20px;
-            font-size: 1rem;
-            color: #fff;
             background: #3498db;
+            color: white;
             border: none;
             border-radius: 5px;
+            font-size: 1rem;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: background 0.3s;
         }
-        button:hover {
+        .login-container button:hover {
             background: #2980b9;
-        }
-        .footer {
-            margin-top: 20px;
-            font-size: 0.9rem;
-            color: #dcdcdc;
         }
     </style>
 </head>
 <body>
     <div class="login-container">
         <h1>Login</h1>
-        <form action="game.html" method="GET">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-
-            <button type="submit">Login</button>
-        </form>
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button onclick="login()">Login</button>
     </div>
-    <div class="footer">Designed with love for fun and learning</div>
+    <script>
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Mock credentials
+            const validUsername = 'user';
+            const validPassword = '1234';
+
+            if (username === validUsername && password === validPassword) {
+                // Redirect to the game page
+                window.location.href = 'game.html';
+            } else {
+                alert('Invalid username or password');
+            }
+        }
+    </script>
 </body>
 </html>
+
