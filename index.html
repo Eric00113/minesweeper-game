@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minesweeper Game</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        h1 {
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            letter-spacing: 1px;
+        }
+        p {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        .controls {
+            margin-bottom: 20px;
+        }
+        .controls label {
+            font-size: 1rem;
+            margin-right: 10px;
+        }
+        .controls input {
+            padding: 5px;
+            font-size: 1rem;
+            width: 50px;
+            margin-right: 10px;
+            text-align: center;
+        }
+        .game-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+            gap: 10px;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 400px;
+        }
+        .cell {
+            width: 100%;
+            aspect-ratio: 1;
+            background: #3498db;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .cell:hover {
+            background: #2980b9;
+        }
+        .cell.clicked {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+        .cell.bomb {
+            background: #e74c3c;
+            color: #fff;
+            animation: shake 0.3s ease;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #dcdcdc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Minesweeper Game</h1>
+    <p>Click on the cells to reveal gems. Avoid the bombs!</p>
+
+    <div class="controls">
+        <label for="gridSize">Grid Size:</label>
+        <input type="number" id="gridSize" value="5" min="2" max="20">
+
+        <label for="bombCount">Bombs:</label>
+        <input type="number" id="bombCount" value="8" min="1">
+
+        <button onclick="initGame()">Start Game</button>
+    </div>
+
+    <div id="game" class="game-container"></div>
+    <div class="footer">Designed with love for fun and learning</div>
+    <script>
+        let gridSize = 5;
+        let bombCount = 8;
+        let grid = [];
+        let bombPositions = [];
+
+        function initGame() {
+            const gridSizeInput = document.getElementById('gridSize');
+            const bombCountInput = document.getElementById('bombCount');
+
+            gridSize = parseInt(gridSizeInput.value);
+            bombCount = parseInt(bombCountInput.value);
+
+            if (bombCount >= gridSize * gridSize) {
+                alert('Too many bombs for the grid size!');
+                return;
+            }
+
+            const gameContainer = document.getElementById('game');
+            gameContainer.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+            gameContainer.innerHTML = '';
+
+            // Generate bomb positions
+            bombPositions = [];
+            while (bombPositions.length < bombCount) {
+                const pos = Math.floor(Math.random() * gridSize * gridSize);
+                if (!bombPositions.includes(pos)) bombPositions.push(pos);
+            }
+
+            // Create grid
+            grid = [];
+            for (let i = 0; i < gridSize * gridSize; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.dataset.index = i;
+
+                // Click event
+                cell.addEventListener('click', () => handleClick(cell, i));
+
+                grid.push(cell);
+                gameContainer.appendChild(cell);
+            }
+        }
+
+        function handleClick(cell, index) {
+            if (cell.classList.contains('clicked')) return;
+
+            cell.classList.add('clicked');
+            if (bombPositions.includes(index)) {
+                cell.classList.add('bomb');
+                cell.textContent = '💣';
+                setTimeout(() => {
+                    alert('Game Over! You hit a bomb.');
+                    initGame();
+                }, 100);
+            } else {
+                cell.textContent = '💎';
+            }
+        }
+
+        // Initialize the game on page load
+        initGame();
+    </script>
+</body>
+</html>
