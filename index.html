@@ -79,11 +79,22 @@
             color: #fff;
             animation: shake 0.3s ease;
         }
+        .explosion {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,69,58,1) 0%, rgba(255,255,255,0) 70%);
+            animation: explode 0.5s ease-out forwards;
+        }
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-5px); }
             50% { transform: translateX(5px); }
             75% { transform: translateX(-5px); }
+        }
+        @keyframes explode {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(4); opacity: 0; }
         }
         .footer {
             margin-top: 20px;
@@ -159,13 +170,51 @@
             if (bombPositions.includes(index)) {
                 cell.classList.add('bomb');
                 cell.textContent = '💣';
+
+                const explosion = document.createElement('div');
+                explosion.className = 'explosion';
+                cell.appendChild(explosion);
+
                 setTimeout(() => {
                     alert('Game Over! You hit a bomb.');
                     initGame();
-                }, 100);
+                }, 500);
             } else {
                 cell.textContent = '💎';
+                if (grid.every(c => c.classList.contains('clicked') || bombPositions.includes(parseInt(c.dataset.index)))) {
+                    setTimeout(() => {
+                        showVictoryEffect();
+                        setTimeout(() => {
+                            alert('Congratulations! You cleared the board!');
+                            initGame();
+                        }, 2000);
+                    }, 100);
+                }
             }
+        }
+
+        function showVictoryEffect() {
+            const gameContainer = document.getElementById('game');
+            const victoryOverlay = document.createElement('div');
+            victoryOverlay.style.position = 'absolute';
+            victoryOverlay.style.top = '0';
+            victoryOverlay.style.left = '0';
+            victoryOverlay.style.width = '100%';
+            victoryOverlay.style.height = '100%';
+            victoryOverlay.style.background = 'rgba(255, 255, 255, 0.8)';
+            victoryOverlay.style.display = 'flex';
+            victoryOverlay.style.justifyContent = 'center';
+            victoryOverlay.style.alignItems = 'center';
+            victoryOverlay.style.fontSize = '2rem';
+            victoryOverlay.style.fontWeight = 'bold';
+            victoryOverlay.style.color = '#2ecc71';
+            victoryOverlay.style.animation = 'fadeOut 2s forwards';
+            victoryOverlay.textContent = '🎉 You Win! 🎉';
+
+            document.body.appendChild(victoryOverlay);
+            setTimeout(() => {
+                document.body.removeChild(victoryOverlay);
+            }, 2000);
         }
 
         // Initialize the game on page load
