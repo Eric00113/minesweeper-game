@@ -5,6 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minesweeper Game</title>
     <style>
+        .cell {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+    transition: transform 0.5s;
+}
+
+.cell.clicked {
+    transform: rotateY(180deg);
+}
+body {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    background-size: 400% 400%;
+    animation: gradientBG 10s ease infinite;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
         body {
             font-family: 'Roboto', Arial, sans-serif;
             text-align: center;
@@ -101,11 +121,16 @@
             font-size: 0.9rem;
             color: #dcdcdc;
         }
+    .button{
+        cursor:pointer;}
     </style>
 </head>
 <body>
+    
     <h1>Minesweeper Game</h1>
     <p>Click on the cells to reveal gems. Avoid the bombs!</p>
+    <audio id="bg-music" src="apple-music.mp3" loop autoplay></audio>
+    <button id="mute-button">🔇</button>
 
     <div class="controls">
         <label for="gridSize">Grid Size:</label>
@@ -209,16 +234,27 @@
             victoryOverlay.style.fontWeight = 'bold';
             victoryOverlay.style.color = '#2ecc71';
             victoryOverlay.style.animation = 'fadeOut 2s forwards';
-            victoryOverlay.textContent = '🎉 You Win! 🎉';
+            victoryOverlay.textContent = '🎊🎉 You Win! 🎉🎊';
 
             document.body.appendChild(victoryOverlay);
             setTimeout(() => {
                 document.body.removeChild(victoryOverlay);
             }, 2000);
-        }
+        }const bgMusic = document.getElementById('bg-music');
+const muteButton = document.getElementById('mute-button');
 
+muteButton.addEventListener('click', () => {
+    if (bgMusic.paused) {
+        bgMusic.play();
+        muteButton.textContent = '🔈';
+    } else {
+        bgMusic.pause();
+        muteButton.textContent = '🔇';
+    }
+});
         // Initialize the game on page load
         initGame();
     </script>
+    
 </body>
 </html>
